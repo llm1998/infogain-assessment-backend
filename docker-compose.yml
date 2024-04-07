@@ -38,9 +38,3 @@ services:
       MYSQL_USERNAME: '${DB_USERNAME}'
       MYSQL_PASSWORD: '${DB_PASSWORD}'
     restart: always
-    network:
-      - mynet
-
-networks:
-  mynet:
-    driver: bridge
