@@ -21,5 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Passport::loadKeysFrom(storage_path('/passport/secrets/oauth'));
+        Passport::enablePasswordGrant();
     }
 }

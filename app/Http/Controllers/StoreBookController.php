@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Store\Book\StoreStoreBookRequest;
 use App\Http\Requests\Store\Book\UpdateStoreBookRequest;
+use App\Models\Book;
 use App\Models\Store;
 use App\Models\StoreBook;
 use Exception;
@@ -44,8 +45,9 @@ class StoreBookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Store $store, StoreBook $storeBook)
+    public function show(Store $store, Book $book)
     {
+        $storeBook = $store->book()->where('books.id', $book->id)->get();
         return response()->json([ 'message' => 'Ok', 'data' => $storeBook ], Response::HTTP_OK);
     }
 
@@ -60,8 +62,21 @@ class StoreBookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Store $store, StoreBook $storeBook)
+    public function destroy(Store $store, Book $book)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $storeBook = $store->book()->where('books.id', $book->id);
+
+            $storeBookClone = clone $storeBook->get();
+            $storeBook = $store->storeBook()->where('book_id', $book->id)->delete();
+            DB::commit();
+        } catch(Exception $e) {
+            DB::rollBack();
+            return response()->json([ 'message' => $e->getMessage() ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return response()->json([ 'message' => 'Ok', 'data' => $storeBookClone, 'deleted' => $storeBook ], Response::HTTP_OK);
     }
 }

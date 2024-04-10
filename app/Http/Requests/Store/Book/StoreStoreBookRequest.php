@@ -21,7 +21,6 @@ class StoreStoreBookRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this);
         return [
             'book_id' => [ 'required', 'exists:books,id' ]
         ];

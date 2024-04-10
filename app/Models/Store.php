@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Store extends Model
@@ -24,5 +25,13 @@ class Store extends Model
     public function book(): BelongsToMany
     {
         return $this->belongsToMany(Book::class, 'store_books');
+    }
+
+    /**
+     * Get the phone associated with the user.
+     */
+    public function storeBook(): HasOne
+    {
+        return $this->hasOne(StoreBook::class);
     }
 }
